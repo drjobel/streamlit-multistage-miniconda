@@ -1,0 +1,19 @@
+version: '3.8'
+
+services:
+  streamlit_modelling:
+    container_name: streamlit-multistage
+    build:
+      dockerfile: ./Dockerfile
+      context: ./
+    image: streamlit-multistage:0.1.0
+    ports:
+      - '8501:8501'
+    volumes:
+      - './data:/usr/src/app/data:delegated'
+      - './project:/usr/src/app/project:delegated'
+      - './images:/usr/src/app/images:delegated'
+    environment:
+      - USER_ID=1000
+      - GROUP_ID=1000
+

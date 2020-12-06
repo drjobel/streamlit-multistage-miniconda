@@ -1,0 +1,25 @@
+name: aqua
+channels:
+  - conda-forge
+dependencies:
+  - python=3.8
+  - numpy
+  - pandas
+  - geopandas
+  - streamlit
+  - rasterio
+  - scipy
+  - rasterstats >=0.9
+  - scikit-learn
+  - folium
+# geoPandas to raster
+  - geocube  
+  - gdal
+  # - pywedge (quick-plotting EDA)
+  - pytest
+  - pip
+  - conda-pack
+  - pip:
+    - pyimpute
+
+
