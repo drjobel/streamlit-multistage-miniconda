@@ -13,9 +13,10 @@ services:
       - './data:/usr/src/app/data:delegated'
       - './project:/usr/src/app/project:delegated'
       - './images:/usr/src/app/images:delegated'
-      - '../drjobel:/usr/src/app/drjobel:delegated'        
+      - '/home/jobel/drjobel/opencode/:/usr/src/app/opencode:delegated'        
+      # /venv/lib/python3.8/site-packages/
     environment:
       - USER_ID=1000
       - GROUP_ID=1000
-      - PYTHONPATH='/usr/src/app/drjobel/'
+      - PYTHONPATH='/usr/src/app/opencode/'
 
