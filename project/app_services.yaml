@@ -1,0 +1,9 @@
+# services API
+# version: 0.1
+# created_on: 2019-12-11
+# maintainer: José Beltrán - AquaBiota Water Research
+
+-
+  name: "home"
+  description: "Project home"
+  url: "./project/services/home.py"

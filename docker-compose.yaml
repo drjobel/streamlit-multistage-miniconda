@@ -1,4 +1,4 @@
-version: '3.8'
+version: '3.3'
 
 services:
   streamlit_modelling:
@@ -8,12 +8,15 @@ services:
       context: ./
     image: streamlit-multistage:0.1.0
     ports:
-      - '8501:8501'
+      - '8502:8502'
     volumes:
       - './data:/usr/src/app/data:delegated'
       - './project:/usr/src/app/project:delegated'
       - './images:/usr/src/app/images:delegated'
+      - '/home/jobel/drjobel/opencode/:/usr/src/app/opencode:delegated'        
+      # /venv/lib/python3.8/site-packages/
     environment:
       - USER_ID=1000
       - GROUP_ID=1000
+      - PYTHONPATH='/usr/src/app/opencode/'
 
