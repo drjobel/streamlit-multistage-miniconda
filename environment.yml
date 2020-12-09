@@ -24,7 +24,9 @@ dependencies:
   - geoplot
   # Use for modelling with sklearn
   - xgboost
+  - plotly
   - pip:
     - pyimpute
     - turpy
     - blockdiag
+    - streamlit-folium>=0.1.0
