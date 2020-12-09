@@ -1,9 +1,8 @@
 import os
 import streamlit as st
 from collections import OrderedDict
-from opencode.io.load_yaml import load_yaml
-from opencode.core import load_script_as_module
-
+from turpy.io.load_yaml import load_yaml
+from turpy.utils import script_as_module
 
 def get_available_activities(filepath: str, label: str = "services to perform", key: str = None):
     """Retrieves from a yaml file the services to show to the user as a sidebar menu"""
@@ -27,6 +26,6 @@ def get_available_activities(filepath: str, label: str = "services to perform", 
             label,
             tasks_names, format_func=lambda x: str(x[0]), key=key)
         # Super geek powers!
-        load_script_as_module(module_filepath)
+        script_as_module(module_filepath)
 
     return selected_task, activities_dict

@@ -1,15 +1,9 @@
 import os
 import sys
 import streamlit as st
-from config import OPENCODE_PATH
-if OPENCODE_PATH not in sys.path:
-    sys.path.append(OPENCODE_PATH)
-
-# `opencode` in github
-import opencode as oc
+import turpy
 from services import get_available_activities
 from config import SERVICES_YAML_URL
-
 
 
 def main():

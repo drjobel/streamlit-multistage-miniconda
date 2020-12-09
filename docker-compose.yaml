@@ -1,14 +1,15 @@
 version: '3.3'
 
 services:
-  streamlit_modelling:
+  streamlit:
     container_name: streamlit-multistage
     build:
       dockerfile: ./Dockerfile
       context: ./
-    image: streamlit-multistage:0.1.0
+    #:0.1.0
+    image: streamlit-multistage   
     ports:
-      - '8502:8502'
+      - '8501:8501'
     volumes:
       - './data:/usr/src/app/data:delegated'
       - './project:/usr/src/app/project:delegated'

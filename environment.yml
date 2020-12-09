@@ -12,14 +12,19 @@ dependencies:
   - rasterstats >=0.9
   - scikit-learn
   - folium
-# geoPandas to raster
+  # geoPandas to raster
   - geocube  
   - gdal
   # - pywedge (quick-plotting EDA)
   - pytest
   - pip
   - conda-pack
+  # useful for quickly adding base maps
+  - contextily
+  - geoplot
+  # Use for modelling with sklearn
+  - xgboost
   - pip:
     - pyimpute
-
-
+    - turpy
+    - blockdiag

@@ -7,3 +7,8 @@
   name: "home"
   description: "Project home"
   url: "./project/services/home.py"
+
+-
+  name: "ETL"
+  description: "ETL"
+  url: "./project/services/etl.py"
