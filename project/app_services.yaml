@@ -16,7 +16,7 @@
 - 
   name: "RESTRICTED"
   description: "Not to share"
-  url: "./RESTRICTED/services/wpd.py"
+  url: "./RESTRICTED/services/data_handling.py"
 
 - 
   name: "DEVELOPMENT"
