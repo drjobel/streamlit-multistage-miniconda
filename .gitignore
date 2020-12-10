@@ -3,6 +3,9 @@
 # Edit at https://www.toptal.com/developers/gitignore?templates=python,r,vscode
 
 .vscode
+RESTRICTED/
+*depreciated*
+*DEPRECIATED*
 
 ### Python ###
 # Byte-compiled / optimized / DLL files

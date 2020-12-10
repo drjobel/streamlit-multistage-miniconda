@@ -12,3 +12,18 @@
   name: "ETL"
   description: "ETL"
   url: "./project/services/etl.py"
+
+- 
+  name: "RESTRICTED"
+  description: "Not to share"
+  url: "./RESTRICTED/services/wpd.py"
+
+- 
+  name: "DEVELOPMENT"
+  description: "Not to share"
+  url: "./RESTRICTED/services/development.py"
+
+- 
+  name: "MODELLING"
+  description: "Not to share"
+  url: "./RESTRICTED/services/model.py"
