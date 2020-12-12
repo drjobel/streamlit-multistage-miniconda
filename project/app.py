@@ -10,8 +10,6 @@ def main():
     selected_service, _ = get_available_activities(
     filepath=os.path.abspath(SERVICES_YAML_URL), label="services:", key='services')
 
-    
-
 
 if __name__ == "__main__":
     main()

@@ -7,8 +7,7 @@ from turpy.utils import script_as_module
 def get_available_activities(filepath: str, label: str = "services to perform", key: str = None):
     """Retrieves from a yaml file the services to show to the user as a sidebar menu"""
 
-    available_activities_list = load_yaml(
-        filepath=os.path.abspath(filepath))
+    available_activities_list = load_yaml(filepath=os.path.abspath(filepath))
 
     activities_dict = OrderedDict(
         {item['name']: item for item in available_activities_list})

@@ -19,4 +19,6 @@ services:
       - USER_ID=1000
       - GROUP_ID=1000
       - MAPBOX_PUBLIC_TOKEN=$MAPBOX_PUBLIC_TOKEN
+      # Used for dataset and SQLite
+      - DATABASE_URL=$DATABASE_URL
 
