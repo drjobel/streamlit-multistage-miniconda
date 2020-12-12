@@ -21,4 +21,5 @@ services:
       - MAPBOX_PUBLIC_TOKEN=$MAPBOX_PUBLIC_TOKEN
       # Used for dataset and SQLite
       - DATABASE_URL=$DATABASE_URL
+      
 

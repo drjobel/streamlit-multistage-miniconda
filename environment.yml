@@ -28,11 +28,13 @@ dependencies:
   - plotly
   # to keep context and run flows
   - prefect
+  - python-graphviz
   - pip:
     - pyimpute
-    - turpy >= 0.2.5
+    - turpy >= 0.2.6
     - blockdiag
-    - streamlit-folium>=0.2.0
+    - streamlit-folium
     - tinydb
     # SQLite
     - dataset
+    - handsdown
