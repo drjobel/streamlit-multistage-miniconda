@@ -27,3 +27,8 @@
   name: "MODELLING"
   description: "Not to share"
   url: "./RESTRICTED/services/model.py"
+
+- 
+  name: "scratch"
+  description: "playground for quick and dirty"
+  url: "./RESTRICTED/services/scratch.py"
