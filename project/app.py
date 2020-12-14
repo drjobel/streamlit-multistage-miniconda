@@ -8,7 +8,7 @@ from context import metadata
 
 
 def main():
-    st.sidebar.title('AquaBiota')  
+    st.sidebar.title('AquaBiota')
 
     selected_service, _ = get_available_activities(
     filepath=os.path.abspath(SERVICES_YAML_URL), label="services:", key='services')
