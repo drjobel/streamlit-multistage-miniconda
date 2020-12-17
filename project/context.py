@@ -3,7 +3,14 @@
 # We initialize it here so the values will persist 
 # when loaded first from the main `app.py`
 
-from turpy import Metadata
-context = Metadata({})
-metadata = context.metadata
+# from turpy import Metadata
+from inshelve import shelf_read
 
+# context = Metadata({})
+# metadata = context.metadata
+
+# metadata = shelf_read('metadata')
+
+# Populate
+if metadata is None:
+    metadata = {}

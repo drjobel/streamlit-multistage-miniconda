@@ -19,6 +19,11 @@
   url: "./RESTRICTED/services/data_handling.py"
 
 - 
+  name: "Harmonizer"
+  description: "Workflow for headers harmonizing"
+  url: "./RESTRICTED/services/harmonize.py"
+
+- 
   name: "DEVELOPMENT"
   description: "Not to share"
   url: "./RESTRICTED/services/development.py"

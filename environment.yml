@@ -29,9 +29,11 @@ dependencies:
   # to keep context and run flows
   - prefect
   - python-graphviz
+  - h3-py
   - pip:
+    - s2sphere    
     - pyimpute
-    - turpy >= 0.2.6
+    - turpy >= 0.2.9
     - blockdiag
     - streamlit-folium
     - tinydb
