@@ -29,7 +29,7 @@
   url: "./RESTRICTED/services/development.py"
 
 - 
-  name: "MODELLING"
+  name: "Model"
   description: "Not to share"
   url: "./RESTRICTED/services/model.py"
 
