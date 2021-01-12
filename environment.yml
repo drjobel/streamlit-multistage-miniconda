@@ -6,6 +6,7 @@ dependencies:
   - numpy
   - pandas
   - geopandas
+  - geopy
   - streamlit
   - rasterio
   - scipy
@@ -24,7 +25,18 @@ dependencies:
   - geoplot
   # Use for modelling with sklearn
   - xgboost
+  - plotly
+  # to keep context and run flows
+  - prefect
+  - python-graphviz
+  - h3-py
   - pip:
+    - s2sphere    
     - pyimpute
-    - turpy
+    - turpy >= 0.2.9
     - blockdiag
+    - streamlit-folium
+    - tinydb
+    # SQLite
+    - dataset
+    - handsdown

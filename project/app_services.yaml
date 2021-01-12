@@ -12,3 +12,28 @@
   name: "ETL"
   description: "ETL"
   url: "./project/services/etl.py"
+
+- 
+  name: "RESTRICTED"
+  description: "Not to share"
+  url: "./RESTRICTED/services/data_handling.py"
+
+- 
+  name: "Harmonizer"
+  description: "Workflow for headers harmonizing"
+  url: "./RESTRICTED/services/harmonize.py"
+
+- 
+  name: "DEVELOPMENT"
+  description: "Not to share"
+  url: "./RESTRICTED/services/development.py"
+
+- 
+  name: "Model"
+  description: "Not to share"
+  url: "./RESTRICTED/services/model.py"
+
+- 
+  name: "scratch"
+  description: "playground for quick and dirty"
+  url: "./RESTRICTED/services/scratch.py"
