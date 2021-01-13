@@ -35,7 +35,7 @@ dependencies:
     - pyimpute
     - turpy >= 0.2.9
     - blockdiag
-    - streamlit-folium
+    # - streamlit-folium  #this is causing problems with conda as it tries to install folium again. But different version
     - tinydb
     # SQLite
     - dataset

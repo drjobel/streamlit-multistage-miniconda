@@ -9,7 +9,8 @@ services:
     #:0.1.0
     image: streamlit-multistage   
     ports:
-      - '8501:8501'
+      # - '8501:8501'
+      - '8502:8502'
     volumes:
       - './data:/usr/src/app/data:delegated'
       - './project:/usr/src/app/project:delegated'

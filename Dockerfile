@@ -5,7 +5,7 @@
 # BASE IMAGE #
 ###############
 
-FROM ubuntu:focal-20201106 as ubuntu-base
+FROM ubuntu:focal-20201106 as ubuntubase
 ENV LANG=C.UTF-8 LC_ALL=C.UTF-8
 ARG DEBIAN_FRONTEND=noninteractive
 ENV TZ=Europe/Stockholm
@@ -47,7 +47,7 @@ RUN pip3 install GDAL==3.0.4
 ###############
 # BUILD IMAGE #
 ###############
-FROM ubuntu-base AS builder-base
+FROM ubuntubase AS builderbase
 
 ENV CONDA_ENV_NAME = aqua
 ENV PATH /opt/conda/bin:$PATH 
@@ -68,7 +68,7 @@ RUN conda env create -f environment.yml
 SHELL ["conda", "run", "-n", "aqua", "/bin/bash", "-c"]
 
 # Activate the environment, and make sure it's activated:
-# RUN echo "conda activate aqua" > ~/.bashrc
+RUN echo "conda activate aqua" > ~/.bashrc
 # RUN pip install pyimpute  
 # handsdown
 
@@ -106,7 +106,7 @@ RUN groupadd --gid $GROUP_ID user && \
     chown -R user:user /usr/src/app
 
 # Copy `/venv` from the previous stage
-COPY  --chown=user:user  --from=builder-base /venv /venv
+COPY  --chown=user:user --from=builderbase /venv /venv
 
 
 # set working directory
@@ -121,9 +121,9 @@ ENV PYTHONDONTWRITEBYTECODE 1
 # Path
 ENV PATH="/venv/bin:$PATH"
 
-# When image is run, rin the code with the environment activated
+# When image is run, run the code with the environment activated
 SHELL ["/bin/bash", "-c"]
 ENTRYPOINT source /venv/bin/activate && \
-    streamlit run project/app.py
+   streamlit run project/app.py
 
 
