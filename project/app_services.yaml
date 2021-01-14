@@ -8,6 +8,11 @@
   description: "Project home"
   url: "./project/services/home.py"
 
+- 
+  name: "hexagon"
+  description: Creates an hexagon grid
+  url: "./project/services/hexagon.py"
+  
 -
   name: "ETL"
   description: "ETL"

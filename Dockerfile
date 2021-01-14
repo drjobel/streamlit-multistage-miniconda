@@ -61,6 +61,7 @@ RUN wget --quiet https://repo.anaconda.com/miniconda/Miniconda3-py38_4.8.3-Linux
     echo "conda activate $CONDA_ENV_NAME" >> ~/.bashrc
 
 # Install the package as normal
+RUN conda update -n base -c defaults conda
 COPY environment.yml .
 RUN conda env create -f environment.yml
 

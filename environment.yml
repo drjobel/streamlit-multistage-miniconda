@@ -30,6 +30,20 @@ dependencies:
   - prefect
   - python-graphviz
   - h3-py
+  # - gdown # no need
+  - altair
+  - hiplot
+  # https://geopandas.org/gallery/plotting_with_geoplot.html
+  - mapclassify  # used by geoplot
+  - geoplot
+  - basemap
+  - basemap-data-hires
+  # https://towardsdatascience.com/real-time-visualization-of-google-form-responses-in-streamlit-1e7fd20c6574
+  - google-api-python-client
+  - google-auth-httplib2
+  - google-auth-oauthlib
+  - oauth2client
+  - gspread
   - pip:
     - s2sphere    
     - pyimpute
@@ -40,3 +54,6 @@ dependencies:
     # SQLite
     - dataset
     - handsdown
+       
+        
+    

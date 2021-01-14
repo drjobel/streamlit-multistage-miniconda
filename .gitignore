@@ -14,6 +14,18 @@ RESTRICTED/
 *.bak
 *.dat
 *.dir
+#
+.gpkg
+.tiff
+.img
+.shp 
+.dbf
+.shx 
+.sbn 
+.prj 
+.tif
+data/
+geodata/
 
 ### Python ###
 # Byte-compiled / optimized / DLL files
