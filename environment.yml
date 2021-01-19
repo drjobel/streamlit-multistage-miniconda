@@ -36,6 +36,9 @@ dependencies:
   # https://geopandas.org/gallery/plotting_with_geoplot.html
   - mapclassify  # used by geoplot
   - geoplot
+  # Context geo tiles in Python
+  # https://contextily.readthedocs.io/en/latest/intro_guide.html
+  - contextily
   - basemap
   - basemap-data-hires
   # https://towardsdatascience.com/real-time-visualization-of-google-form-responses-in-streamlit-1e7fd20c6574
