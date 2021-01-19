@@ -49,7 +49,9 @@ dependencies:
   - oauth2client
   - gspread
   - pylint
+  - flake8
   - pytest
+  - rope
   #  vectorized geometry functions
   - pygeos 
   - pydeck
@@ -62,7 +64,7 @@ dependencies:
   - statsmodels
   - Rtree
   # 
-  - flake8
+  
   # Instantly make your loops show a smart progress meter
   - tqdm
   #

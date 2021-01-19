@@ -31,7 +31,7 @@ lat_centr_point = 59.6025
 lon_centr_point = 1.445478
 
 
-def latlong_to_h3_geometry(latitude_dd:float, longitude_dd:float, resolution: int = 8):
+def latlong_to_h3_geometry(latitude_dd:float, longitude_dd:float, resolution: int = 8)->str:
     """Converts a lat long point in decimal degrees to H3 hexagon geometry
 
     Args:
@@ -72,7 +72,7 @@ def latlong_to_h3_geometry(latitude_dd:float, longitude_dd:float, resolution: in
     for _, row in df_res_point.iterrows():
         feature = geojson.feature.Feature(geometry=row["geometry"],
                         id=row["hex_id"],
-                        properties={"resolution": int(row["res"])})
+            properties={"resolution": int(row["h3_resolution"])})
         list_features.append(feature)
 
     feat_collection = geojson.feature.FeatureCollection(list_features)
@@ -95,7 +95,7 @@ def latlong_to_h3_geometry(latitude_dd:float, longitude_dd:float, resolution: in
     """
 
     # df_res_point
-    st.write(type(geojson_result))
+    
 
     return geojson_result
 
@@ -163,7 +163,7 @@ def load_geopandas_dataset(
         with st.spinner("Downloading data from google drive... this may take sometime! \n Please wait ..."):
             download_file(id=file_id, destination=f_checkpoint)
 
-    gdf = gpd.read_file(f_checkpoint)  
+    gdf = gpd.read_file(f_checkpoint)
     return gdf
     
 """ when useing folium you need to reproject to 4326
