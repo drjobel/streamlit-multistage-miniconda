@@ -12,10 +12,9 @@ import streamlit.components.v1 as components
 import matplotlib.pyplot as plt
 from h3 import h3
 import folium
-from typing import List
 
 from turpy.io.gdrive import download_file
-from ..config import DATA_URL_DICT
+from config import DATA_URL_DICT
 
 import warnings
 warnings.filterwarnings('ignore')
@@ -103,7 +102,7 @@ def latlong_to_h3_geometry(latitude_dd:float, longitude_dd:float, resolution: in
 
 def show_map(
     geojson_result, 
-    center_location: List(float, float), 
+    center_location: list, 
     zoom_start: float = 5.5, 
     tiles: str = "cartodbpositron",
     attr:str = '''© <a href="http://www.openstreetmap.org/copyright">
