@@ -9,6 +9,8 @@ dependencies:
   - geopy
   - streamlit
   - rasterio
+  - shapely
+  - geojson
   - scipy
   - rasterstats >=0.9
   - scikit-learn
@@ -21,8 +23,7 @@ dependencies:
   - pip
   - conda-pack
   # useful for quickly adding base maps
-  - contextily
-  - geoplot
+  # - geoplot # So far not useful for my application
   # Use for modelling with sklearn
   - xgboost
   - plotly
@@ -35,7 +36,7 @@ dependencies:
   - hiplot
   # https://geopandas.org/gallery/plotting_with_geoplot.html
   - mapclassify  # used by geoplot
-  - geoplot
+  # - geoplot
   # Context geo tiles in Python
   # https://contextily.readthedocs.io/en/latest/intro_guide.html
   - contextily
@@ -47,6 +48,25 @@ dependencies:
   - google-auth-oauthlib
   - oauth2client
   - gspread
+  - pylint
+  - pytest
+  #  vectorized geometry functions
+  - pygeos 
+  - pydeck
+  # Exploratory Analysis of Spatial Data
+  - pysal
+  - esda
+  # Python Spatial Analysis Library Core
+  - libpysal
+  #
+  - statsmodels
+  - Rtree
+  # 
+  - flake8
+  # Instantly make your loops show a smart progress meter
+  - tqdm
+  #
+  - more-itertools
   - pip:
     - s2sphere    
     - pyimpute
@@ -57,6 +77,9 @@ dependencies:
     # SQLite
     - dataset
     - handsdown
+    # Approximate Nearest Neighbors in C++/Python optimized for memory usage and loading/saving to disk
+    - annoy 
+  
        
         
     

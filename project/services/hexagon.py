@@ -1,23 +1,146 @@
 import os
+from pathlib import Path
 import json
+import geojson
+import numpy as np
+import pandas as pd
+from pandas.io.json import json_normalize
+import geopandas as gpd
 from shapely.geometry import Polygon
 import streamlit as st
-import geopandas as gpd
-from turpy.io.gdrive import download_file
-from pathlib import Path
-
-import geoplot as gplt
-# import geoplot.crs as gcrs
+import streamlit.components.v1 as components
 import matplotlib.pyplot as plt
-
 from h3 import h3
 import folium
-import streamlit.components.v1 as components
+from typing import List
 
-from config import DATA_URL_DICT
+from turpy.io.gdrive import download_file
+from ..config import DATA_URL_DICT
+
+import warnings
+warnings.filterwarnings('ignore')
+
+# don't use scientific notation
+np.set_printoptions(suppress=True)
+pd.set_option('display.float_format', lambda x: '%.5f' % x)
 
 
 st.title('Hexagon grid')
+
+# Stockholm
+lat_centr_point = 59.6025
+lon_centr_point = 1.445478
+
+
+def latlong_to_h3_geometry(latitude_dd:float, longitude_dd:float, resolution: int = 8):
+    """Converts a lat long point in decimal degrees to H3 hexagon geometry
+
+    Args:
+        latitude_dd (float): [latitude in decimal degrees]
+        longitude_dd (float): [longitude in decimal degrees]
+        resolution (int, optional): [H3 resolution/ APERTURE_SIZE]. Defaults to 8.
+
+    Returns:
+        [type]: [description]
+    """    
+    
+    
+
+    list_hex_res = []
+    list_hex_res_geom = []
+
+    h = h3.geo_to_h3(
+        lat=latitude_dd,
+        lng=longitude_dd,
+        resolution = resolution
+        )
+
+    list_hex_res.append(h)
+    # get the geometry of the hexagon and convert to geojson
+    h_geom = {"type": "Polygon",
+              "coordinates": [h3.h3_to_geo_boundary(h=h, geo_json=True)]
+              }
+    list_hex_res_geom.append(h_geom)
+
+    df_res_point = pd.DataFrame({"h3_resolution": resolution,
+                                 "hex_id": list_hex_res,
+                                 "geometry": list_hex_res_geom
+                                 })
+
+    list_features = []
+
+
+    for _, row in df_res_point.iterrows():
+        feature = geojson.feature.Feature(geometry=row["geometry"],
+                        id=row["hex_id"],
+                        properties={"resolution": int(row["res"])})
+        list_features.append(feature)
+
+    feat_collection = geojson.feature.FeatureCollection(list_features)
+    geojson_result = json.dumps(feat_collection)
+
+    """
+    folium.GeoJson(
+        geojson_result,
+        style_function=lambda feature: {
+            'fillColor': None,
+            'color': ("green"
+                      if feature['properties']['resolution'] % 2 == 0
+                      else "red"),
+            'weight': 2,
+            'fillOpacity': 0.05
+        },
+        name="Example"
+    )
+    )
+    """
+
+    # df_res_point
+    st.write(type(geojson_result))
+
+    return geojson_result
+
+
+def show_map(
+    geojson_result, 
+    center_location: List(float, float), 
+    zoom_start: float = 5.5, 
+    tiles: str = "cartodbpositron",
+    attr:str = '''© <a href="http://www.openstreetmap.org/copyright">
+                          OpenStreetMap</a>contributors ©
+                          <a href="http://cartodb.com/attributions#basemaps">
+                          CartoDB</a>'''
+                  ):
+    """[summary]
+
+    Args:
+        center_location (List): [description]
+        zoom_start (float, optional): [description]. Defaults to 5.5.
+        tiles (str, optional): [description]. Defaults to "cartodbpositron".
+        attr (str, optional): [description]. Defaults to '''© <a href="http://www.openstreetmap.org/copyright"> OpenStreetMap</a>contributors © <a href="http://cartodb.com/attributions#basemaps"> CartoDB</a>'''.
+
+    Returns:
+        [type]: [description]
+    """
+
+    fmap = folium.Map(location=center_location,
+                      zoom_start=zoom_start,
+                      tiles=tiles,
+                      attr=attr
+                      )
+
+    folium.GeoJson(
+        geojson_result,
+        style_function=lambda feature: {
+            'fillColor': None,
+            'color': ("green"),
+            'weight': 1,
+            'fillOpacity': 0.05
+        },
+        name="Marin Medvind"
+    ).add_to(fmap)
+
+    return fmap
 
 
 @st.cache
@@ -138,10 +261,10 @@ def gdf_to_h3_geojson(gdf: gpd.GeoDataFrame):
 
     st.write(f"gdf.crs: {gdf.crs}")
     df = gdf.to_crs(epsg='4326')
-    js = df.to_json() #  this is a string
-    geoJSON = json.loads(js)
+    #  this is a string
+    js = df.to_json() 
 
-    return geoJSON
+    return js
 
 def build_hexs(gdf:gpd.GeoDataFrame, APERTURE_SIZE:int = 8):
     """
@@ -180,6 +303,8 @@ def polygonize_hexagons(gdf: gpd.GeoDataFrame, APERTURE_SIZE: int = 8, crs: str 
 
 
 def main():
+    """
+    """
 
     APERTURE_SIZE = 7
 
@@ -191,11 +316,21 @@ def main():
         dirpath='./data/', 
         filename=filename)
 
-    hexagons = polygonize_hexagons(gdf=gdf, APERTURE_SIZE=8, crs='EPSG:3006')
+    #hexagons = polygonize_hexagons(gdf=gdf, APERTURE_SIZE=8, crs='EPSG:3006')
 
-
+  
     fig, ax = plt.subplots(figsize=(2, 4))
-    ax = hexagons.plot(alpha=0.5, color="xkcd:pale yellow", figsize=(9, 9))
+
+    geojson_result = latlong_to_h3_geometry(
+        latitude_dd=lat_centr_point, longitude_dd=lon_centr_point, resolution=APERTURE_SIZE)
+
+    ax = show_map(
+        geojson_result=geojson_result, 
+        center_location=[lat_centr_point, lon_centr_point],
+        zoom_start=5.5,
+        tiles="cartodbpositron")
+
+    #ax = hexagons.plot(alpha=0.5, color="xkcd:pale yellow", figsize=(9, 9))
 
     st.pyplot(fig)
 
