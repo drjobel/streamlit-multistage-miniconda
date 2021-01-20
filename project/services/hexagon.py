@@ -284,6 +284,7 @@ def polygonise(hex_id):
 
 def polygonize_hexagons(gdf: gpd.GeoDataFrame, APERTURE_SIZE: int = 8, crs: str = "EPSG:4326"):
     """
+
     https://geographicdata.science/book/data/h3_grid/build_sd_h3_grid.html
     """
 
