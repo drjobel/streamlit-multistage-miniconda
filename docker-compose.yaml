@@ -1,19 +1,27 @@
-version: '3.8'
+version: '3.3'
 
 services:
-  streamlit_modelling:
+  streamlit:
     container_name: streamlit-multistage
     build:
       dockerfile: ./Dockerfile
       context: ./
-    image: streamlit-multistage:0.1.0
+    #:0.1.0
+    image: streamlit-multistage   
     ports:
-      - '8501:8501'
+      # - '8501:8501'
+      - '8502:8502'
     volumes:
       - './data:/usr/src/app/data:delegated'
       - './project:/usr/src/app/project:delegated'
       - './images:/usr/src/app/images:delegated'
+      - '/home/jobel/RESTRICTED:/usr/src/app/RESTRICTED:delegated'
     environment:
       - USER_ID=1000
       - GROUP_ID=1000
+      - MAPBOX_PUBLIC_TOKEN=$MAPBOX_PUBLIC_TOKEN
+      # Used for dataset and SQLite
+      - DATABASE_URL=$DATABASE_URL
+      - W3W_API_KEY=$W3W_API_KEY
+      
 

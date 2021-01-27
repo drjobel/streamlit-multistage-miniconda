@@ -6,20 +6,87 @@ dependencies:
   - numpy
   - pandas
   - geopandas
+  - geopy
   - streamlit
   - rasterio
+  - shapely
+  - geojson
   - scipy
   - rasterstats >=0.9
   - scikit-learn
   - folium
-# geoPandas to raster
-  - geocube  
+  # geoPandas to raster
+  - geocube
   - gdal
   # - pywedge (quick-plotting EDA)
   - pytest
   - pip
   - conda-pack
+  # useful for quickly adding base maps
+  # - geoplot # So far not useful for my application
+  # Use for modelling with sklearn
+  - xgboost
+  - plotly
+  # to keep context and run flows
+  - prefect
+  - python-graphviz
+  - h3-py
+  # - gdown # no need
+  - altair
+  - hiplot
+  # https://geopandas.org/gallery/plotting_with_geoplot.html
+  - mapclassify  # used by geoplot
+  # - geoplot
+  # Context geo tiles in Python
+  # https://contextily.readthedocs.io/en/latest/intro_guide.html
+  - contextily
+  - basemap
+  - basemap-data-hires
+  # https://towardsdatascience.com/real-time-visualization-of-google-form-responses-in-streamlit-1e7fd20c6574
+  - google-api-python-client
+  - google-auth-httplib2
+  - google-auth-oauthlib
+  - oauth2client
+  - gspread
+  - pylint
+  - flake8
+  - pytest
+  - rope
+  #  vectorized geometry functions
+  - pygeos
+  - pydeck
+  # Exploratory Analysis of Spatial Data
+  - pysal
+  - esda
+  # Python Spatial Analysis Library Core
+  - libpysal
+  #
+  # zonal statistics on raster data
+  - rasterstats
+  - statsmodels
+  - Rtree
+  #
+  # Instantly make your loops show a smart progress meter
+  - tqdm
+  #
+  - more-itertools
+  #
+  - xarray
+  - rioxarray
+  - earthpy
+  # Zarr is a format for the storage of chunked, compressed, N-dimensional arrays. (related to xarray)
+  - zarr
+  # A pythonic file-system interface to Google Cloud Storage (related to zarr)
+  - gcsfs  
   - pip:
+    - s2sphere
     - pyimpute
-
-
+    - turpy >= 0.2.9
+    - blockdiag
+    # - streamlit-folium  #this is causing problems with conda as it tries to install folium again. But different version
+    - tinydb
+    # SQLite
+    - dataset
+    - handsdown
+    # Approximate Nearest Neighbors in C++/Python optimized for memory usage and loading/saving to disk
+    - annoy

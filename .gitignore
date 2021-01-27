@@ -2,6 +2,31 @@
 # Created by https://www.toptal.com/developers/gitignore/api/python,r,vscode
 # Edit at https://www.toptal.com/developers/gitignore?templates=python,r,vscode
 
+.vscode
+*private*
+*restricted*
+*RESTRICTED*
+RESTRICTED/
+*depreciated*
+*DEPRECIATED*
+# python shelve
+*.shelve
+*.bak
+*.dat
+*.dir
+#
+.gpkg
+.tiff
+.img
+.shp 
+.dbf
+.shx 
+.sbn 
+.prj 
+.tif
+data/
+geodata/
+
 ### Python ###
 # Byte-compiled / optimized / DLL files
 __pycache__/
