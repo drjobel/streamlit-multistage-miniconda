@@ -16,7 +16,7 @@ dependencies:
   - scikit-learn
   - folium
   # geoPandas to raster
-  - geocube  
+  - geocube
   - gdal
   # - pywedge (quick-plotting EDA)
   - pytest
@@ -53,7 +53,7 @@ dependencies:
   - pytest
   - rope
   #  vectorized geometry functions
-  - pygeos 
+  - pygeos
   - pydeck
   # Exploratory Analysis of Spatial Data
   - pysal
@@ -61,16 +61,25 @@ dependencies:
   # Python Spatial Analysis Library Core
   - libpysal
   #
+  # zonal statistics on raster data
+  - rasterstats
   - statsmodels
   - Rtree
-  # 
-  
+  #
   # Instantly make your loops show a smart progress meter
   - tqdm
   #
   - more-itertools
+  #
+  - xarray
+  - rioxarray
+  - earthpy
+  # Zarr is a format for the storage of chunked, compressed, N-dimensional arrays. (related to xarray)
+  - zarr
+  # A pythonic file-system interface to Google Cloud Storage (related to zarr)
+  - gcsfs  
   - pip:
-    - s2sphere    
+    - s2sphere
     - pyimpute
     - turpy >= 0.2.9
     - blockdiag
@@ -80,8 +89,4 @@ dependencies:
     - dataset
     - handsdown
     # Approximate Nearest Neighbors in C++/Python optimized for memory usage and loading/saving to disk
-    - annoy 
-  
-       
-        
-    
+    - annoy

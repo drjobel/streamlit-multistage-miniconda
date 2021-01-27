@@ -15,6 +15,7 @@ import folium
 
 from turpy.io.gdrive import download_file
 from config import DATA_URL_DICT
+from h3_funtools import visualize_hexagons, visualize_polygon, polygonize_hexagons
 
 import warnings
 warnings.filterwarnings('ignore')
@@ -28,11 +29,11 @@ st.title('Hexagon grid')
 
 # Stockholm
 lat_centr_point = 59.6025
-lon_centr_point = 1.445478
+lon_centr_point = 18.1384
 
 
-def latlong_to_h3_geometry(latitude_dd:float, longitude_dd:float, resolution: int = 8)->str:
-    """Converts a lat long point in decimal degrees to H3 hexagon geometry
+def latlong_to_geojson_string_h3_geometry(latitude_dd:float, longitude_dd:float, resolution: int = 8)->str:
+    """Converts a lat long point in decimal degrees to a geojson string with H3 hexagon geometry.
 
     Args:
         latitude_dd (float): [latitude in decimal degrees]
@@ -40,7 +41,7 @@ def latlong_to_h3_geometry(latitude_dd:float, longitude_dd:float, resolution: in
         resolution (int, optional): [H3 resolution/ APERTURE_SIZE]. Defaults to 8.
 
     Returns:
-        [type]: [description]
+        [type]: geojson string
     """    
     
     
@@ -78,71 +79,22 @@ def latlong_to_h3_geometry(latitude_dd:float, longitude_dd:float, resolution: in
     feat_collection = geojson.feature.FeatureCollection(list_features)
     geojson_result = json.dumps(feat_collection)
 
-    """
-    folium.GeoJson(
-        geojson_result,
-        style_function=lambda feature: {
-            'fillColor': None,
-            'color': ("green"
-                      if feature['properties']['resolution'] % 2 == 0
-                      else "red"),
-            'weight': 2,
-            'fillOpacity': 0.05
-        },
-        name="Example"
-    )
-    )
-    """
-
-    # df_res_point
-    
-
     return geojson_result
 
 
-def show_map(
-    geojson_result, 
-    center_location: list, 
-    zoom_start: float = 5.5, 
-    tiles: str = "cartodbpositron",
-    attr:str = '''© <a href="http://www.openstreetmap.org/copyright">
-                          OpenStreetMap</a>contributors ©
-                          <a href="http://cartodb.com/attributions#basemaps">
-                          CartoDB</a>'''
-                  ):
-    """[summary]
+@st.cache(allow_output_mutation=True)
+def geodataframe_from_local_filepath(local_filepath:Path)->gpd.GeoDataFrame:
+    """Returns a Geopandas GeoDataFrame
 
     Args:
-        center_location (List): [description]
-        zoom_start (float, optional): [description]. Defaults to 5.5.
-        tiles (str, optional): [description]. Defaults to "cartodbpositron".
-        attr (str, optional): [description]. Defaults to '''© <a href="http://www.openstreetmap.org/copyright"> OpenStreetMap</a>contributors © <a href="http://cartodb.com/attributions#basemaps"> CartoDB</a>'''.
-
-    Returns:
-        [type]: [description]
+        local_filepath (Path): [description]
     """
+    assert local_filepath.exists()
 
-    fmap = folium.Map(location=center_location,
-                      zoom_start=zoom_start,
-                      tiles=tiles,
-                      attr=attr
-                      )
-
-    folium.GeoJson(
-        geojson_result,
-        style_function=lambda feature: {
-            'fillColor': None,
-            'color': ("green"),
-            'weight': 1,
-            'fillOpacity': 0.05
-        },
-        name="Marin Medvind"
-    ).add_to(fmap)
-
-    return fmap
+    gdf = gpd.read_file(local_filepath)
+    return gdf
 
 
-@st.cache
 def load_geopandas_dataset(
     DATA_URL: str, 
     dirpath: str = './data/',
@@ -157,67 +109,30 @@ def load_geopandas_dataset(
     save_dest = Path(dirpath)
     save_dest.mkdir(exist_ok=True)
 
-    f_checkpoint = Path(os.path.join(dirpath, filename))
+    destination_filepath = os.path.join(dirpath, filename)
 
-    if not f_checkpoint.exists():
-        with st.spinner("Downloading data from google drive... this may take sometime! \n Please wait ..."):
-            download_file(id=file_id, destination=f_checkpoint)
+    gdf = None
 
-    gdf = gpd.read_file(f_checkpoint)
-    return gdf
-    
-""" when useing folium you need to reproject to 4326
-import geopandas as gpd
-df = gpd.read_file(data)
-
-"""
-
-def visualize_hexagons(hexagons, color="red", folium_map=None):
-    """
-    hexagons is a list of hexcluster. Each hexcluster is a list of hexagons. 
-    eg. [[hex1, hex2], [hex3, hex4]]
-
-    source: https://nbviewer.jupyter.org/github/uber/h3-py-notebooks/blob/master/notebooks/usage.ipynb
-    """
-    polylines = []
-    lat = []
-    lng = []
-    for hex in hexagons:
-        polygons = h3.h3_set_to_multi_polygon([hex], geo_json=False)
-        # flatten polygons into loops.
-        outlines = [loop for polygon in polygons for loop in polygon]
-        polyline = [outline + [outline[0]] for outline in outlines][0]
-        lat.extend(map(lambda v: v[0], polyline))
-        lng.extend(map(lambda v: v[1], polyline))
-        polylines.append(polyline)
-
-    if folium_map is None:
-        m = folium.Map(location=[sum(lat)/len(lat), sum(lng) /
-                                 len(lng)], zoom_start=13, tiles='cartodbpositron')
+    if Path(destination_filepath).exists():
+        with st.spinner('Loading local data ... please wait'):
+            gdf = geodataframe_from_local_filepath(
+                local_filepath=Path(destination_filepath))
     else:
-        m = folium_map
-    for polyline in polylines:
-        my_PolyLine = folium.PolyLine(
-            locations=polyline, weight=8, color=color)
-        m.add_child(my_PolyLine)
-    return m
+        with st.spinner("Downloading data from google drive... this may take sometime! \n Please wait ..."):
+            status, local_filepath = download_file(
+                data_url = DATA_URL,
+                destination_filepath=destination_filepath
+            )
+            if status:
+                gdf = geodataframe_from_local_filepath(
+                    local_filepath=local_filepath)
+            else:
+                st.error('ERROR: Downloading status : {status}: {local_filepath}')
+                
+    
+    return gdf  # Note gdf is None by default 
 
-
-def visualize_polygon(polyline, color):
-    """
-    source: https://nbviewer.jupyter.org/github/uber/h3-py-notebooks/blob/master/notebooks/usage.ipynb
-    """
-    polyline.append(polyline[0])
-    lat = [p[0] for p in polyline]
-    lng = [p[1] for p in polyline]
-    m = folium.Map(location=[sum(lat)/len(lat), sum(lng) /
-                             len(lng)], zoom_start=13, tiles='cartodbpositron', crs='EPSG3006')   # default 'EPSG3857'
-    my_PolyLine = folium.PolyLine(locations=polyline, weight=8, color=color)
-    m.add_child(my_PolyLine)
-    return m
-
-
-
+        
 
 def folium_static(fig, width=700, height=500):
     """
@@ -253,60 +168,17 @@ def folium_static(fig, width=700, height=500):
     )
 
 
-def gdf_to_h3_geojson(gdf: gpd.GeoDataFrame):
-
-    assert gdf.crs is not None
-    assert gdf.crs != ""
-
-    st.write(f"gdf.crs: {gdf.crs}")
-    df = gdf.to_crs(epsg='4326')
-    #  this is a string
-    js = df.to_json() 
-
-    return js
-
-def build_hexs(gdf:gpd.GeoDataFrame, APERTURE_SIZE:int = 8):
+def lat_lng_to_h3(row, h3_level:int):
     """
-    source: https://geographicdata.science/book/data/h3_grid/build_sd_h3_grid.html
     """
-    hexs = h3.polyfill(
-        gdf.geometry[0].__geo_interface__, APERTURE_SIZE, geo_json_conformant=True)
-    return hexs
-
-
-def polygonise(hex_id):
-    """
-    source: https://geographicdata.science/book/data/h3_grid/build_sd_h3_grid.html
-    """ 
-    return Polygon(h3.h3_to_geo_boundary(
-        hex_id, geo_json=True))
-
-
-def polygonize_hexagons(gdf: gpd.GeoDataFrame, APERTURE_SIZE: int = 8, crs: str = "EPSG:4326"):
-    """
-
-    https://geographicdata.science/book/data/h3_grid/build_sd_h3_grid.html
-    """
-
-    GeoJSON_polygon = gdf_to_h3_geojson(gdf=gdf)
-
-
-
-    hexs = h3.polyfill(GeoJSON_polygon, APERTURE_SIZE, geo_json_conformant=True)
-
-    all_polys = gpd.GeoSeries(list(map(polygonise, hexs)),
-                                    index=hexs,
-                                    crs=crs
-                                    )
-    return all_polys
-
-
+    return h3.geo_to_h3(
+        row.geometry.y, row.geometry.x, h3_level)
 
 def main():
     """
     """
-
-    APERTURE_SIZE = 7
+    
+    # APERTURE_SIZE = 7
 
     filename = DATA_URL_DICT[3]['name']
     DATA_URL = DATA_URL_DICT[3]['URL']
@@ -316,12 +188,70 @@ def main():
         dirpath='./data/', 
         filename=filename)
 
-    #hexagons = polygonize_hexagons(gdf=gdf, APERTURE_SIZE=8, crs='EPSG:3006')
+    if gdf is not None:
+        #
+        assert gdf.crs is not None
+        assert gdf.crs != ""
 
+        st.write(f"gdf.crs: {gdf.crs}")
+        gdf = gdf.to_crs(epsg='4326').copy()
+        #
+        h3_level = 8.5
+        gdf[f'H3_{h3_level}'] = gdf.apply(
+            lambda row: h3.geo_to_h3(
+                row.geometry.y, row.geometry.x, h3_level), axis=1)
+
+        # st.write(gdf.plot())
+        # lat, lng, hex resolution
+        h3_address = h3.geo_to_h3(58.426172, 17.3623063, h3_level)
+        hex_center_coordinates = h3.h3_to_geo(h3_address)
+        hex_boundary = h3.h3_to_geo_boundary(h3_address)
+        m = visualize_hexagons([h3_address])
+        tooltip = "Hexagon center"
+        folium.Marker(
+            hex_center_coordinates, popup="Hexagon center", tooltip=tooltip
+        ).add_to(m)
+
+        # hexagons = polygonize_hexagons(gdf=gdf, APERTURE_SIZE=8, crs='EPSG:3006')
+
+        #st.write(hexagons)
+        
+        # st.write(gdf[f'H3_{h3_level}'].head(20))
+
+        # find all points that fall in the grid polygon
+        counts = gdf.groupby([f'H3_{h3_level}'])[f'H3_{h3_level}'].agg(
+            'count').to_frame('count').reset_index()
+
+        # https://spatialthoughts.com/2020/07/01/point-in-polygon-h3-geopandas/
+        # To visualize the results or export it to a GIS, we need to convert the H3 cell ids to a geometry.
+        # The h3_to_geo_boundary function takes a H3 key and returns a list of coordinates that form the hexagonal cell.
+        # Since GeoPandas uses shapely library for constructing geometries, we convert the list of coordinates 
+        # to a shapely Polygon object. Note the optional second argument to the h3_to_geo_boundary function which 
+        # we have set to True which returns the coordinates in the(x, y) order compared to default(lat, lon)
+
+        def add_geometry(row):
+            points = h3.h3_to_geo_boundary(
+                row[f'H3_{h3_level}'], True)
+            return Polygon(points)
+
+        st.write(counts.head(20))
+        counts['geometry'] = counts.apply(add_geometry, axis=1)
+
+        counts_gdf = gpd.GeoDataFrame(counts, crs='EPSG:4326')
+
+        # We turn the dataframe to a GeoDataframe with the CRS EPSG:4326
+        # (WGS84 Latitude/Longitude) and write it to a geopackage.
+        output_filename = f'./data/gridcounts_H3_{h3_level}.gpkg'
+        counts_gdf.to_file(driver='GPKG', filename=output_filename)
+
+        #hexs = h3.polyfill(
+        #    gdf.geometry[0].__geo_interface__, APERTURE_SIZE, geo_json_conformant=True)
+
+    """
   
     fig, ax = plt.subplots(figsize=(2, 4))
 
-    geojson_result = latlong_to_h3_geometry(
+    geojson_result = latlong_to_geojson_string_h3_geometry(
         latitude_dd=lat_centr_point, longitude_dd=lon_centr_point, resolution=APERTURE_SIZE)
 
     ax = show_map(
@@ -343,10 +273,9 @@ def main():
     #ax.axis('off')
     #st.pyplot(fig)
     """
-    # lat, lng, hex resolution
-    h3_address = h3.geo_to_h3(58.426172, 17.3623063, APERTURE_SIZE)
-    hex_center_coordinates = h3.h3_to_geo(h3_address)
-    hex_boundary = h3.h3_to_geo_boundary(h3_address)
+
+    """
+    
 
     m = visualize_hexagons([h3_address])
 
@@ -398,6 +327,7 @@ def main():
 
     # call to render Folium map in Streamlit
     folium_static(m)
+    
     """
 
 #
