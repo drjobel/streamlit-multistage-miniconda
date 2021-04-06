@@ -1,3 +1,4 @@
 # .dockerignore
 .venv
 .env*
+.tar

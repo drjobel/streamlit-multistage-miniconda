@@ -15,6 +15,7 @@ RESTRICTED/
 *.dat
 *.dir
 #
+.tar
 .gpkg
 .tiff
 .img
@@ -221,3 +222,5 @@ vignettes/*.pdf
 *.code-workspace
 
 # End of https://www.toptal.com/developers/gitignore/api/python,r,vscode
+.gitignore
+ubuntu-streamlit-focal-20210119.tar
