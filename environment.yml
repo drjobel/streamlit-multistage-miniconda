@@ -1,3 +1,4 @@
+# To be implemented here [2021-05-13]
 name: aqua
 channels:
   - conda-forge
@@ -22,6 +23,8 @@ dependencies:
   - pytest
   - pip
   - conda-pack
+  # 
+  - conda-build
   # useful for quickly adding base maps
   # - geoplot # So far not useful for my application
   # Use for modelling with sklearn
@@ -46,6 +49,8 @@ dependencies:
   - google-api-python-client
   - google-auth-httplib2
   - google-auth-oauthlib
+  - geemap
+  - earthengine-api
   - oauth2client
   - gspread
   - pylint
@@ -77,7 +82,11 @@ dependencies:
   # Zarr is a format for the storage of chunked, compressed, N-dimensional arrays. (related to xarray)
   - zarr
   # A pythonic file-system interface to Google Cloud Storage (related to zarr)
-  - gcsfs  
+  - gcsfs
+  # disk and file backed cache library, better than shelve objects?
+  - diskcache
+  - lorem
+  - rdflib   
   - pip:
     - s2sphere
     - pyimpute
@@ -90,3 +99,5 @@ dependencies:
     - handsdown
     # Approximate Nearest Neighbors in C++/Python optimized for memory usage and loading/saving to disk
     - annoy
+    # SPARQL Endpoint interface to Python
+    - sparqlwrapper
